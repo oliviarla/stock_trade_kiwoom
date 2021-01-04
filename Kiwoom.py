@@ -1,4 +1,9 @@
-"""
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QAxContainer import *
+from PyQt5.QtCore import *
+
+
 class Kiwoom(QAxWidget):  # QAxWidget 클래스로부터 dynamicCall, setControl, OnEventConnect 를 상속받음
     def __init__(self):
         super().__init__()
@@ -36,6 +41,14 @@ class Kiwoom(QAxWidget):  # QAxWidget 클래스로부터 dynamicCall, setControl
         for item in kospi_code_name_list:
             print(item)
 
+    def get_code_list_by_market(self, market):
+        code_list = self.dynamicCall("GetCodeListByMarket(QString)", market)
+        code_list = code_list.split(';')
+        return code_list[:-1]
+
+    def get_master_code_name(self, code):
+        code_name = self.dynamicCall("GetMasterCodeName(QString)", code)
+        return code_name
 
 if __name__ == "__main__":
     '''
@@ -45,11 +58,16 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     kiwoom = Kiwoom()
     kiwoom.comm_connect()
-    kiwoom.get_all_codes_names()
-    sys.exit(app.exec_())
-"""
+#    kiwoom.get_all_codes_names()
+    print(kiwoom.get_master_code_name("000660"))
+#    code_list = kiwoom.get_code_list_by_market('10')
+#    for code in code_list:
+#        print(code, end=" ")
+#    sys.exit(app.exec_())
+
 
 #삼성전자 주가 차트그리기
+'''
 import pandas_datareader.data as web
 import datetime
 start = datetime.date(2020, 12, 19)
@@ -61,3 +79,4 @@ print(samsung.index)
 import matplotlib.pyplot as plt
 plt.plot(samsung['Adj Close'])
 plt.show()
+'''
