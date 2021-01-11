@@ -1,0 +1,5 @@
+rsc/
+*.xlsx
+.idea/
+__pycache__/
+.git/

@@ -42,7 +42,6 @@ if __name__ == "__main__":
     myWindow = MyWindow()
     myWindow.show()
     sys.exit(app.exec_())
-'''
 
 
 #주가 이동 평균선 plt로 그리기
@@ -74,3 +73,5 @@ plt.plot(new_gs.index, new_gs['MA120'], label='MA120')
 plt.legend(loc="best")
 plt.grid()
 plt.show()
+'''
+
