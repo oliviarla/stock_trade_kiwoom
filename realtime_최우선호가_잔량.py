@@ -27,6 +27,12 @@ class MyWindow(QMainWindow):
         QTimer.singleShot(1000 * 2, self.CommmConnect)
 
 
+    def CommmConnect(self):
+        self.ocx.dynamicCall("CommConnect()")
+        self.statusBar().showMessage("login 중 ...")
+
+   #최우선 호가 실행 시 아래 함수 사용`
+    '''    
     #구독 버튼 눌렀을 때
     def btn_clicked(self):
         self.SetRealReg("1000", "005930", "27;28", 0) #FID 27, 28로 GetCommRealData 메소드를 호출하여 데이터를 가져온다
@@ -35,15 +41,6 @@ class MyWindow(QMainWindow):
     def btn2_clicked(self):
         self.DisConnectRealData("1000")
 
-    def CommmConnect(self):
-        self.ocx.dynamicCall("CommConnect()")
-        self.statusBar().showMessage("login 중 ...")
-
-    def _handler_login(self, err_code):
-        if err_code == 0:
-            self.statusBar().showMessage("login 완료")
-
-
     def _handler_real_data(self, code, real_type, data):
         if real_type == "주식우선호가":
             now = datetime.datetime.now()
@@ -51,6 +48,36 @@ class MyWindow(QMainWindow):
             bid01 =  self.GetCommRealData(code, 28)
 
             print(f"현재시간 {now} | 최우선매도호가: {ask01} 최우선매수호가: {bid01}")
+    '''
+
+    ############호가 잔량 확인 시 아래 함수 사용###############
+
+    def btn_clicked(self):
+        self.SetRealReg("1000", "005930", "41", 0)
+
+    def btn2_clicked(self):
+        self.DisConnectRealData("1000") 
+
+    def CommmConnect(self):
+        self.ocx.dynamicCall("CommConnect()")
+        self.statusBar().showMessage("login 중 ...")
+
+    def _handler_real_data(self, code, real_type, data):
+        if real_type == "주식호가잔량":
+            hoga_time =  self.GetCommRealData(code, 21)         
+            ask01_price =  self.GetCommRealData(code, 41)         
+            ask01_volume =  self.GetCommRealData(code, 61)         
+            bid01_price =  self.GetCommRealData(code, 51)         
+            bid01_volume =  self.GetCommRealData(code, 71)         
+            print(hoga_time)
+            print(f"매도호가: {ask01_price} - {ask01_volume}")
+            print(f"매수호가: {bid01_price} - {bid01_volume}")
+
+    ############################################################
+
+    def _handler_login(self, err_code):
+        if err_code == 0:
+            self.statusBar().showMessage("login 완료")
 
     def SetRealReg(self, screen_no, code_list, fid_list, real_type):
         self.ocx.dynamicCall("SetRealReg(QString, QString, QString, QString)",
